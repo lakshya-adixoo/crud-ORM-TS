@@ -52,3 +52,91 @@ export const adduser = async (req: Request, res: Response): Promise<any> => {
         return res.status(500).json({ error: "Internal server error" });  // Use 500 instead of 200
     }
 };
+
+
+export const updateuser = async (req : Request , res :Response) : Promise<any> => {
+
+   try{
+    const {id} = req.params;
+    const {firstName , lastName , isActive} = req.body;
+
+    const userRepo = dataSource.getRepository(User);
+    const existingEmp = await userRepo.findOne({ where: { id: Number(id) } });
+
+    if(!existingEmp){
+        return res.status(400).json({
+            success:true,
+            message:"user not found"
+        })
+    }
+
+        if(!id){
+            return res.status(404).json({
+                success:true,
+                message: "please provide ID"
+            })
+        }
+
+        if(!lastName || !firstName){
+            return res.status(404).json({
+                success:true,
+                message:"please provide email and password"
+            })
+        }
+
+      if(lastName){
+        existingEmp.lastName = lastName
+      }
+      if(firstName){
+        existingEmp.firstName = firstName
+      }
+      if(isActive){
+        existingEmp.isActive = isActive
+      }
+
+      await userRepo.save(existingEmp);
+
+
+      return res.status(200).json({
+        success:true,
+        message : "user updated successfully"
+      })
+
+
+    }catch(err){
+        console.log("Internal Server Error" , err)
+        return res.status(400).json({
+            success: true,
+            message: "Internal Server Error"
+        })
+    }
+        
+}
+
+
+
+export const deleteUser = async(req : Request , res: Response) : Promise<any> => {
+
+    const{id} = req.params;
+    try{
+
+        const userRepo = dataSource.getRepository(User);
+        const findUser = await userRepo.find({where : {id : Number(id)}})
+
+        await userRepo.remove(findUser);
+
+        return res.status(200).json({
+            success:true,
+            message : "User Deleted Successfully"
+        })
+
+    }
+    catch(err){
+        console.log("Internal Server error")
+        return res.status(404).json({
+            success:true,
+            message : "Internal Server Error"
+        })
+    }
+}
+    
