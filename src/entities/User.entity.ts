@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column , OneToOne , JoinColumn} from "typeorm"
+import { Profile } from "./profile.entity"
 
 @Entity()
 export class User {
@@ -13,4 +14,8 @@ export class User {
 
     @Column()
     isActive: boolean
+
+    @OneToOne(()=> Profile , {cascade:true})
+    @JoinColumn()
+    profile:Profile;
 }

@@ -1,6 +1,7 @@
 import { User } from "../entities/User.entity";
 import { Request  ,  Response } from "express";
 import dataSource from "../datasource/dataSource";
+import { Profile } from "../entities/profile.entity";
 
 export const getuser = async (req: Request, res: Response): Promise<any> => {
     try {
@@ -114,7 +115,6 @@ export const updateuser = async (req : Request , res :Response) : Promise<any> =
 }
 
 
-
 export const deleteUser = async(req : Request , res: Response) : Promise<any> => {
 
     const{id} = req.params;
@@ -138,5 +138,26 @@ export const deleteUser = async(req : Request , res: Response) : Promise<any> =>
             message : "Internal Server Error"
         })
     }
+}
+
+
+export const testing = async(req:Request , res : Response) => {
+    let profileRepo = dataSource.getRepository(Profile);
+    let userRepo = dataSource.getRepository(User);
+
+    let profile = new Profile();
+    profile.gender = "female";
+    profile.skill = "Social media manager";
+
+    
+    let user = new User();
+    user.firstName = "Anushka";
+    user.lastName = "Agrawal";
+    user.isActive = false;
+    user.profile = profile;
+
+    let saveuser = await userRepo.save(user);
+
+    res.json(saveuser);
 }
     

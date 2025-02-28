@@ -1,5 +1,6 @@
 import { DataSource} from 'typeorm';
 import { User } from '../entities/User.entity';
+import { Profile } from '../entities/profile.entity';
 
 const dataSource = new DataSource({
        type: "postgres",
@@ -11,7 +12,8 @@ const dataSource = new DataSource({
        logging : true,
        synchronize : true,
        entities : [
-        User
+        User,
+        Profile
        ]
 })
 
