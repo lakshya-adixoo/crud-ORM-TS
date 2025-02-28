@@ -1,6 +1,7 @@
 import { DataSource} from 'typeorm';
 import { User } from '../entities/User.entity';
 import { Profile } from '../entities/profile.entity';
+import { Todo } from '../entities/Todo.entity';
 
 const dataSource = new DataSource({
        type: "postgres",
@@ -13,7 +14,8 @@ const dataSource = new DataSource({
        synchronize : true,
        entities : [
         User,
-        Profile
+        Profile,
+        Todo
        ]
 })
 

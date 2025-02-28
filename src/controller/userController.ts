@@ -7,8 +7,9 @@ export const getuser = async (req: Request, res: Response): Promise<any> => {
     try {
         const userRepo = dataSource.getRepository(User);
         const users = await userRepo.find({
-            select : ["firstName" , "isActive"]
+            relations: ["profile"]
         });
+        
 
         if (users.length === 0) {
             return res.status(404).json({
@@ -31,17 +32,16 @@ export const getuser = async (req: Request, res: Response): Promise<any> => {
 
 
 export const adduser = async (req: Request, res: Response): Promise<any> => {
-    const { firstName, lastName, isActive, id } = req.body;
+    const { firstName, lastName, isActive, id , profile } = req.body;
 
     try {
         const userRepo = dataSource.getRepository(User);
+        const userProfile = dataSource.getRepository(Profile);
         const existingEmp = await userRepo.findOne({ where: { id } });
         if (!existingEmp) {
             
             const newEmp = userRepo.create(req.body);
-         
-             await userRepo.save(newEmp);
-          
+            await userRepo.save(newEmp);
 
             return res.status(201).json({ message: "Employee ID added successfully" });
         }
@@ -59,7 +59,7 @@ export const updateuser = async (req : Request , res :Response) : Promise<any> =
 
    try{
     const {id} = req.params;
-    const {firstName , lastName , isActive} = req.body;
+    const {firstName , lastName , isActive , profile} = req.body;
 
     const userRepo = dataSource.getRepository(User);
     const existingEmp = await userRepo.findOne({ where: { id: Number(id) } });
@@ -86,13 +86,16 @@ export const updateuser = async (req : Request , res :Response) : Promise<any> =
         }
 
       if(lastName){
-        existingEmp.lastName = lastName
+         existingEmp.lastName = lastName
       }
       if(firstName){
         existingEmp.firstName = firstName
       }
       if(isActive){
         existingEmp.isActive = isActive
+      }
+      if(profile){
+          existingEmp.profile = profile
       }
 
       await userRepo.save(existingEmp);
