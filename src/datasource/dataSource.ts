@@ -1,22 +1,18 @@
-import { DataSource} from 'typeorm';
+import { DataSource, Migration} from 'typeorm';
 import { User } from '../entities/User.entity';
-import { Profile } from '../entities/profile.entity';
-import { Todo } from '../entities/Todo.entity';
 
 const dataSource = new DataSource({
        type: "postgres",
-       host : "localhost",
-       port : 5432,
-       username : "postgres",
-       password : "root",
-       database : "crud-api",
+       host : process.env.DB_HOST ||"localhost",
+       port : Number(process.env.DB_PORT)|| 5432,
+       username : process.env.DB_USER ||"postgres",
+       password : process.env.DB_PASSWORD ||"root",
+       database : process.env.DB_NAME || "crud-api",
        logging : true,
-       synchronize : true,
-       entities : [
-        User,
-        Profile,
-        Todo
-       ]
+       entities : [User],
+       migrationsTableName:"migration_table",
+       migrations : ["src/migrations/*.ts"],
+      
 })
 
 

@@ -1,25 +1,26 @@
 import { Entity, PrimaryGeneratedColumn, Column , OneToOne , JoinColumn, OneToMany} from "typeorm"
-import { Profile } from "./profile.entity"
-import { Todo } from "./Todo.entity"
-@Entity()
+@Entity({ name: "user" })
 export class User {
     @PrimaryGeneratedColumn()
-    id: number
+    id: number;
 
     @Column()
-    firstName: string
+    firstName: string;
 
     @Column()
-    lastName: string
+    lastName: string;
 
     @Column()
-    isActive: boolean
+    isActive: boolean;
 
-    @OneToOne(()=> Profile , {cascade:true})
-    @JoinColumn()
-    profile:Profile;
+    @Column()
+    password: string;
 
-
-    @OneToMany(()=>Todo,(todo) => todo.user , {cascade:true})
-    todos:Todo[]
+    constructor() {
+        this.id = 0;
+        this.firstName = "";
+        this.lastName = "";
+        this.password = "";
+        this.isActive = false;
+    }
 }
